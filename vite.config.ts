@@ -17,19 +17,35 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (!id.includes('node_modules')) return;
-
-          // Keep the main app bundle smaller and cache vendors better.
-          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) return 'react-vendor';
-          if (id.includes('@tanstack')) return 'query-vendor';
-          if (id.includes('@radix-ui')) return 'radix-vendor';
-          if (id.includes('recharts')) return 'charts-vendor';
-          if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) return 'forms-vendor';
-          if (id.includes('date-fns') || id.includes('react-day-picker')) return 'date-vendor';
-          if (id.includes('lucide-react')) return 'icons-vendor';
-
-          return 'vendor';
+        manualChunks: {
+          // React must be in its own chunk and load first
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          // UI components
+          "radix-vendor": [
+            "@radix-ui/react-accordion",
+            "@radix-ui/react-alert-dialog",
+            "@radix-ui/react-checkbox",
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-label",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-select",
+            "@radix-ui/react-slot",
+            "@radix-ui/react-switch",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-toast",
+            "@radix-ui/react-tooltip",
+          ],
+          // Charts
+          "charts-vendor": ["recharts"],
+          // Forms
+          "forms-vendor": ["react-hook-form", "@hookform/resolvers", "zod"],
+          // Query
+          "query-vendor": ["@tanstack/react-query"],
+          // Icons
+          "icons-vendor": ["lucide-react"],
+          // Date utilities
+          "date-vendor": ["date-fns", "react-day-picker"],
         },
       },
     },
