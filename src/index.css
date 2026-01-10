@@ -1,0 +1,188 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Enterprise Dark Theme - Navy/Slate Base */
+    --background: 222 47% 6%;
+    --foreground: 210 40% 96%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 96%;
+
+    --primary: 187 85% 53%;
+    --primary-foreground: 222 47% 6%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 96%;
+
+    --muted: 217 33% 14%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 187 85% 43%;
+    --accent-foreground: 222 47% 6%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 187 85% 53%;
+
+    --radius: 0.75rem;
+
+    /* Status Colors */
+    --status-critical: 0 84% 60%;
+    --status-high: 25 95% 53%;
+    --status-medium: 45 93% 47%;
+    --status-low: 142 76% 36%;
+    --status-success: 142 76% 36%;
+    --status-warning: 45 93% 47%;
+    --status-danger: 0 84% 60%;
+
+    /* Chart Colors */
+    --chart-1: 187 85% 53%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 45 93% 47%;
+    --chart-4: 0 84% 60%;
+    --chart-5: 280 65% 60%;
+
+    /* Sidebar */
+    --sidebar-background: 222 47% 5%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 187 85% 53%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 217 33% 12%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 217 33% 15%;
+    --sidebar-ring: 187 85% 53%;
+
+    /* Glass Effect */
+    --glass-bg: 222 47% 8% / 0.8;
+    --glass-border: 217 33% 25% / 0.3;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(187 85% 53%), hsl(200 80% 45%));
+    --gradient-card: linear-gradient(180deg, hsl(222 47% 10%), hsl(222 47% 7%));
+    --gradient-critical: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 70% 45%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 60% 28%));
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 187 85% 43%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 187 85% 43%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/30;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+  }
+
+  .status-critical {
+    @apply bg-[hsl(var(--status-critical))] text-white;
+  }
+
+  .status-high {
+    @apply bg-[hsl(var(--status-high))] text-white;
+  }
+
+  .status-medium {
+    @apply bg-[hsl(var(--status-medium))] text-black;
+  }
+
+  .status-low {
+    @apply bg-[hsl(var(--status-low))] text-white;
+  }
+
+  .kri-green {
+    @apply bg-[hsl(var(--status-success))]/10 border-[hsl(var(--status-success))]/30 text-[hsl(var(--status-success))];
+  }
+
+  .kri-yellow {
+    @apply bg-[hsl(var(--status-warning))]/10 border-[hsl(var(--status-warning))]/30 text-[hsl(var(--status-warning))];
+  }
+
+  .kri-red {
+    @apply bg-[hsl(var(--status-danger))]/10 border-[hsl(var(--status-danger))]/30 text-[hsl(var(--status-danger))];
+  }
+
+  .animate-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .pulse-dot {
+    @apply relative;
+  }
+
+  .pulse-dot::before {
+    content: '';
+    @apply absolute inset-0 rounded-full animate-ping;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+}
