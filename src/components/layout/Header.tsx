@@ -2,7 +2,6 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/auth/authContext";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -10,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, Search, ChevronRight } from "lucide-react";
+import { Menu, ChevronRight } from "lucide-react";
 import { useI18n } from "@/i18n";
 import { NotificationBell } from "@/components/notifications";
 
@@ -134,25 +133,6 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
         <h1 className="md:hidden text-lg font-semibold truncate">
           {getPageTitle()}
         </h1>
-      </div>
-
-      {/* Search */}
-      <div className="hidden md:flex relative max-w-xs">
-        <Search
-          className={
-            isRTL
-              ? "absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-              : "absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-          }
-        />
-        <Input
-          placeholder={strings.common.search}
-          className={
-            isRTL
-              ? "pr-9 w-48 lg:w-64 bg-secondary/50 border-border/50"
-              : "pl-9 w-48 lg:w-64 bg-secondary/50 border-border/50"
-          }
-        />
       </div>
 
       {/* Language */}
