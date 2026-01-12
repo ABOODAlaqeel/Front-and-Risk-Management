@@ -20,15 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Shield,
-  User,
-  UserCheck,
-  Eye,
-  Loader2,
-  Lock,
-  Mail,
-} from "lucide-react";
+import { Shield, User, Loader2, Lock, Mail } from "lucide-react";
 import type { UserRole } from "@/utils/constants";
 import { getAuthStats } from "@/api/authApi";
 import { userApi } from "@/api";
@@ -38,31 +30,12 @@ import { useI18n } from "@/i18n";
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, register, loginWithRole, isLoading } = useAuth();
+  const { login, register, isLoading } = useAuth();
   const { toast } = useToast();
   const { strings } = useI18n();
 
-  const roleInfo = {
-    Admin: {
-      icon: Shield,
-      description: strings.auth.roleAdminDesc,
-      color: "text-primary",
-    },
-    "Data Entry": {
-      icon: UserCheck,
-      description: strings.auth.roleDataEntryDesc,
-      color: "text-chart-2",
-    },
-    Viewer: {
-      icon: Eye,
-      description: strings.auth.roleViewerDesc,
-      color: "text-chart-3",
-    },
-  };
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
 
   const [signUpName, setSignUpName] = useState("");
   const [signUpEmail, setSignUpEmail] = useState("");
@@ -125,26 +98,6 @@ export const Login: React.FC = () => {
     }
   };
 
-  const handleRoleLogin = async (role: UserRole) => {
-    setSelectedRole(role);
-    try {
-      await loginWithRole(role);
-      toast({
-        title: strings.auth.toastWelcomeTitle,
-        description: `${strings.auth.toastLoggedInAs} ${role}`,
-      });
-      navigate(from, { replace: true });
-    } catch (error) {
-      toast({
-        title: strings.auth.toastLoginFailedTitle,
-        description: strings.auth.toastLoginFailedDesc,
-        variant: "destructive",
-      });
-    } finally {
-      setSelectedRole(null);
-    }
-  };
-
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -200,55 +153,13 @@ export const Login: React.FC = () => {
             <CardDescription>{strings.auth.cardDescription}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="quick" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
-                <TabsTrigger value="quick">{strings.auth.tabQuick}</TabsTrigger>
+            <Tabs defaultValue="email" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="email">{strings.auth.tabEmail}</TabsTrigger>
                 <TabsTrigger value="signup">
                   {strings.auth.tabSignup}
                 </TabsTrigger>
               </TabsList>
-
-              <TabsContent value="quick" className="space-y-4">
-                <p className="text-sm text-muted-foreground mb-4">
-                  {strings.auth.quickHint}
-                </p>
-                {(
-                  Object.entries(roleInfo) as [
-                    UserRole,
-                    typeof roleInfo.Admin
-                  ][]
-                ).map(([role, info]) => {
-                  const Icon = info.icon;
-                  return (
-                    <Button
-                      key={role}
-                      variant="outline"
-                      className="w-full justify-start h-auto p-4 hover:bg-secondary/80 transition-colors"
-                      onClick={() => handleRoleLogin(role)}
-                      disabled={isLoading}
-                    >
-                      <div className="flex items-start gap-4 w-full">
-                        <div
-                          className={`p-2 rounded-lg bg-secondary ${info.color}`}
-                        >
-                          {selectedRole === role && isLoading ? (
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                          ) : (
-                            <Icon className="h-5 w-5" />
-                          )}
-                        </div>
-                        <div className="text-left">
-                          <p className="font-medium">{role}</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {info.description}
-                          </p>
-                        </div>
-                      </div>
-                    </Button>
-                  );
-                })}
-              </TabsContent>
 
               <TabsContent value="email">
                 <form onSubmit={handleEmailLogin} className="space-y-4">
@@ -274,7 +185,7 @@ export const Login: React.FC = () => {
                       <Input
                         id="password"
                         type="password"
-                        placeholder={strings.auth.anyPassword}
+                        placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="pl-10"
@@ -287,9 +198,6 @@ export const Login: React.FC = () => {
                       {strings.auth.forgotPasswordLink}
                     </Link>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {strings.auth.demoUsers}
-                  </p>
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? (
                       <>
@@ -373,8 +281,12 @@ export const Login: React.FC = () => {
                           ))
                         ) : (
                           <>
-                            <SelectItem value="viewer">{strings.auth.roleViewerLabel}</SelectItem>
-                            <SelectItem value="data_entry">{strings.auth.roleDataEntryLabel}</SelectItem>
+                            <SelectItem value="viewer">
+                              {strings.auth.roleViewerLabel}
+                            </SelectItem>
+                            <SelectItem value="data_entry">
+                              {strings.auth.roleDataEntryLabel}
+                            </SelectItem>
                           </>
                         )}
                       </SelectContent>

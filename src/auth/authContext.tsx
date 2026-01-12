@@ -100,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const register = useCallback(
-    async (name: string, email: string, password: string, role: UserRole) => {
+    async (name: string, email: string, password: string, _role: UserRole) => {
       setIsLoading(true);
       try {
         const response = await authApi.register({
@@ -138,14 +138,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           "treatments.create",
           "assessments.create",
           "bcp.create",
+          "incidents.create",
+          "kri.create",
         ],
         canEdit: [
           "risks.update",
           "treatments.update",
           "assessments.update",
           "bcp.update",
+          "incidents.update",
+          "kri.update",
         ],
-        canDelete: ["risks.delete", "treatments.delete", "bcp.delete"],
+        canDelete: [
+          "risks.delete",
+          "treatments.delete",
+          "bcp.delete",
+          "incidents.delete",
+          "kri.delete",
+        ],
         canViewTreatments: ["treatments.view"],
         canViewReports: ["reports.view"],
         canViewAnalysis: ["risks.view"],
@@ -160,20 +170,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Use backend permissions when available.
       const backendPerms = permissionMap[permission] || [];
 
-      // If backend provided explicit permissions, check them first but
-      // also fall back to role-based permissions to handle cases where
-      // certain backend modules (e.g., BCP) weren't seeded with perms.
+      // Check backend permissions from user.permissions array
       if (user.permissions && user.permissions.length > 0) {
         const hasBackendPerm = backendPerms.some((bp) =>
           user.permissions?.includes(bp)
         );
         if (hasBackendPerm) return true;
-        // Fall through to role-based fallback
+        // If user has permissions array but doesn't have this permission, return false
+        return false;
       }
 
+      // Map backend role codes to frontend role names
+      const roleMap: Record<string, string> = {
+        super_admin: "Admin",
+        risk_manager: "Data Entry",
+        risk_owner: "Data Entry",
+        viewer: "Viewer",
+        // Also support frontend role names directly
+        Admin: "Admin",
+        "Data Entry": "Data Entry",
+        Viewer: "Viewer",
+      };
+
       // Fallback to static role permissions.
+      const frontendRole = roleMap[user.role] || user.role;
       const perms = getEffectivePermissions();
-      return perms[user.role]?.[permission] ?? false;
+      return perms[frontendRole as keyof typeof perms]?.[permission] ?? false;
     },
     [user]
   );
